@@ -20,7 +20,7 @@ public record Variable(int identifier) implements Exp {
     @Override
     public Set<Integer> getVariables() {
         // TODO: implement this
-        return null;
+        return Set.of(identifier);
     }
 
     @Override
