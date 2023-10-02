@@ -2,6 +2,7 @@ package edu.postech.csed332.homework2;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,38 +34,86 @@ public class ExpTest {
         Exp exp = ExpParser.parse("(p1 && p2)");
         assertEquals("(p1 && p2)", exp.toPrettyString());
     }
-
     @Test
     void testConstant() {
         Exp exp = ExpParser.parse("true");
         assertEquals("true", exp.toPrettyString());
     }
-
     @Test
     void testDisjunction() {
         Exp exp = ExpParser.parse("(p1 || p2)");
         assertEquals("(p1 || p2)", exp.toPrettyString());
     }
-
     @Test
     void testNegation() {
         Exp exp = ExpParser.parse("(! p1)");
         assertEquals("(! p1)", exp.toPrettyString());
     }
-
     @Test
     void testVariable() {
         Exp exp = ExpParser.parse("p1");
         assertEquals("p1", exp.toPrettyString());
     }
-
+    @Test
+    void testConjunctionGetVariables() {
+        Exp exp = ExpParser.parse("(p1 && p2)");
+        assertEquals(Set.of(1, 2), exp.getVariables());
+    }
+    @Test
+    void testDisjunctionGetVariables() {
+        Exp exp = ExpParser.parse("(p1 || p2)");
+        assertEquals(Set.of(1, 2), exp.getVariables());
+    }
+    @Test
+    void testNegationGetVariables() {
+        Exp exp = ExpParser.parse("(! p1)");
+        assertEquals(Set.of(1), exp.getVariables());
+    }
+    @Test
+    void testConstantGetVariables() {
+        Exp exp = ExpParser.parse("true");
+        assertEquals(Set.of(), exp.getVariables());
+    }
+    @Test
+    void testVariableGetVariables() {
+        Exp exp = ExpParser.parse("p1");
+        assertEquals(Set.of(1), exp.getVariables());
+    }
     @Test
     void testInvalidVariable() {
         assertThrows(IllegalArgumentException.class, () ->
                 new Variable(0)
         );
     }
-
-
-
+    @Test
+    void testVariableEvaluate() {
+        Exp exp = ExpParser.parse("p1");
+        assertEquals(true, exp.evaluate(Map.of(1, true)));
+        assertEquals(false, exp.evaluate(Map.of(1, false)));
+    }
+    @Test
+    void testConstantEvaluate() {
+        Exp exp = ExpParser.parse("true");
+        assertEquals(true, exp.evaluate(Map.of()));
+    }
+    @Test
+    void testConjunctionEvaluate() {
+        Exp exp = ExpParser.parse("(p1 && p2)");
+        assertEquals(true, exp.evaluate(Map.of(1, true, 2, true)));
+        assertEquals(false, exp.evaluate(Map.of(1, true, 2, false)));
+    }
+    @Test
+    void testDisjunctionEvaluate() {
+        Exp exp = ExpParser.parse("(p1 || p2)");
+        assertEquals(true, exp.evaluate(Map.of(1, true, 2, true)));
+        assertEquals(true, exp.evaluate(Map.of(1, true, 2, false)));
+        assertEquals(true, exp.evaluate(Map.of(1, false, 2, true)));
+        assertEquals(false, exp.evaluate(Map.of(1, false, 2, false)));
+    }
+    @Test
+    void testNegationEvaluate() {
+        Exp exp = ExpParser.parse("(! p1)");
+        assertEquals(true, exp.evaluate(Map.of(1, false)));
+        assertEquals(false, exp.evaluate(Map.of(1, true)));
+    }
 }

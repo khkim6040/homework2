@@ -11,13 +11,13 @@ public record Negation(Exp subExp) implements Exp {
     @Override
     public Set<Integer> getVariables() {
         // TODO: implement this
-        return null;
+        return subExp().getVariables();
     }
 
     @Override
     public Boolean evaluate(Map<Integer, Boolean> assignment) {
         // TODO: implement this
-        return null;
+        return !subExp().evaluate(assignment);
     }
 
     @Override

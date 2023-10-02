@@ -26,7 +26,7 @@ public record Variable(int identifier) implements Exp {
     @Override
     public Boolean evaluate(Map<Integer, Boolean> assignment) {
         // TODO: implement this
-        return null;
+        return assignment.get(identifier);
     }
 
     @Override
