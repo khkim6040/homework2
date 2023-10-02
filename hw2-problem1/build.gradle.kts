@@ -20,6 +20,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     //TODO: add an extra dependency for ANTLR4 (version 4.13.1)
+    antlr("org.antlr:antlr4:4.13.1")
 }
 
 tasks.test {
@@ -34,4 +35,6 @@ tasks.jacocoTestReport {
 
 tasks.generateGrammarSource {
     //TODO: pass the argument -visitor to this task.
+    maxHeapSize = "64m"
+    arguments = arguments + listOf("-visitor", "-long-messages")
 }
