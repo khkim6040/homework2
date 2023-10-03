@@ -116,4 +116,24 @@ public class ExpTest {
         assertEquals(true, exp.evaluate(Map.of(1, false)));
         assertEquals(false, exp.evaluate(Map.of(1, true)));
     }
+    @Test
+    void testConjunctionSimplify() {
+        Exp exp1 = ExpParser.parse("(p1 && true)");
+        Exp exp2 = ExpParser.parse("(p1 && p1)");
+        Exp exp3 = ExpParser.parse("(p1 && false)");
+        Exp exp4 = ExpParser.parse("(p1 && ! p1)");
+        Exp exp5 = ExpParser.parse("(p1 && (p1 || p2))");
+        Exp exp6 = ExpParser.parse("(p1 && p2)");
+        assertEquals("p1", exp1.simplify().toPrettyString());
+        assertEquals("p1", exp2.simplify().toPrettyString());
+        assertEquals("false", exp3.simplify().toPrettyString());
+        assertEquals("false", exp4.simplify().toPrettyString());
+        assertEquals("p1", exp5.simplify().toPrettyString());
+        assertEquals("(p1 && p2)", exp6.simplify().toPrettyString());
+    }
+//    @Test
+//    void testDominationAndDoubleNegationLaws() {
+//
+//    }
+
 }
