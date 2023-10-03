@@ -32,13 +32,17 @@ public record Conjunction(Exp... subExps) implements Exp {
     public Exp simplify() {
         // TODO: implement this
         // exp && true == exp
-        // exp && exp == exp
         // exp && false == false
+        // exp && exp == exp
         boolean true_flag = false;
         boolean false_flag = false;
         boolean same_flag = false;
         Exp result = null;
         for(Exp exp: subExps){
+            if (result == null) {
+                result = exp;
+                continue;
+            }
             if(exp instanceof Constant){
                 if(((Constant) exp).value()){
                     true_flag = true;
@@ -47,12 +51,8 @@ public record Conjunction(Exp... subExps) implements Exp {
                     false_flag = true;
                 }
             }
-            else {
-                // how to check if two expressions are the same?
-                if(result != null && result.toPrettyString().equals(exp.toPrettyString())) {
+            else if(result.toPrettyString().equals(exp.toPrettyString())) {
                     same_flag = true;
-                }
-                result = exp;
             }
         }
         if(true_flag || same_flag) {
@@ -64,16 +64,19 @@ public record Conjunction(Exp... subExps) implements Exp {
         // exp && ! exp == false
         boolean negation_flag = false;
         same_flag = false;
+        result = null;
         for(Exp exp: subExps){
+            if (result == null) {
+                result = exp;
+                continue;
+            }
             if(exp instanceof Negation) {
-                negation_flag = !negation_flag;
+                negation_flag = true;
+                String exp_str = exp.toPrettyString().substring(3, exp.toPrettyString().length() - 1);
+                if(result.toPrettyString().equals(exp_str)) {
+                    same_flag = true;
+                }
             }
-            if(result != null &&
-                    result.getVariables().equals(exp.getVariables()) &&
-                    exp.toPrettyString().contains(result.toPrettyString())) {
-                same_flag = true;
-            }
-            result = exp;
         }
         if(negation_flag && same_flag){
             return new Constant(false);
@@ -81,21 +84,26 @@ public record Conjunction(Exp... subExps) implements Exp {
         // exp1 && (exp1 || exp2) == exp1
         boolean disjunction_flag = false;
         same_flag = false;
+        result = null;
         for(Exp exp: subExps){
-            if(exp instanceof Disjunction){
-                disjunction_flag = !disjunction_flag;
-                if(result != null && exp.toPrettyString().contains(result.toPrettyString())){
-                    same_flag = true;
-                }
-            }
-            else {
+            if (result == null) {
                 result = exp;
+                continue;
+            }
+            if(exp instanceof Disjunction){
+                disjunction_flag = true;
+                // how to get each subexpression of exp?
+                for(Exp disjunction_exp: ((Disjunction) exp).subExps()) {
+                    if (result.toPrettyString().equals(disjunction_exp.toPrettyString())) {
+                        same_flag = true;
+                    }
+                }
             }
         }
         if(disjunction_flag && same_flag){
             return result;
         }
-
+        // When there is no simplification
         return this;
     }
 

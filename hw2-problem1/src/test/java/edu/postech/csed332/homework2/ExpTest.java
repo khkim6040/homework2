@@ -131,9 +131,23 @@ public class ExpTest {
         assertEquals("p1", exp5.simplify().toPrettyString());
         assertEquals("(p1 && p2)", exp6.simplify().toPrettyString());
     }
-//    @Test
-//    void testDominationAndDoubleNegationLaws() {
-//
-//    }
+    @Test
+    void testDisjunctionSimplify() {
+        Exp exp1 = ExpParser.parse("(p1 || false)");
+        Exp exp2 = ExpParser.parse("(p1 || p1)");
+        Exp exp3 = ExpParser.parse("(p1 || true)");
+        Exp exp4 = ExpParser.parse("(p1 || ! p1)");
+        Exp exp5 = ExpParser.parse("(p1 || (p1 && p2))"); // p1 == a || b, p2 == a || b && a case?
+        Exp exp6 = ExpParser.parse("(p1 || p2)");
+        Exp exp7 = ExpParser.parse("(p1 || (p2 || (p2 && p3)))");
+        assertEquals("p1", exp1.simplify().toPrettyString());
+        assertEquals("p1", exp2.simplify().toPrettyString());
+        assertEquals("true", exp3.simplify().toPrettyString());
+        assertEquals("true", exp4.simplify().toPrettyString());
+        assertEquals("p1", exp5.simplify().toPrettyString());
+        assertEquals("(p1 || p2)", exp6.simplify().toPrettyString());
+        assertEquals("(p1 || p2)", exp7.simplify().toPrettyString());
+    }
+
 
 }
