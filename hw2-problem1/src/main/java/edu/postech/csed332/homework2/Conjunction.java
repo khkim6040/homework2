@@ -56,7 +56,7 @@ public record Conjunction(Exp... subExps) implements Exp {
             }
         }
         if(true_flag || same_flag) {
-            return result;
+            return result.simplify();
         }
         else if(false_flag){
             return new Constant(false);
@@ -101,7 +101,7 @@ public record Conjunction(Exp... subExps) implements Exp {
             }
         }
         if(disjunction_flag && same_flag){
-            return result;
+            return result.simplify();
         }
         // When there is no simplification
         return this;

@@ -23,7 +23,15 @@ public record Negation(Exp subExp) implements Exp {
     @Override
     public Exp simplify() {
         // TODO: implement this
-        return null;
+        Exp exp = subExp();
+        // ! (! exp) == exp
+        if (exp instanceof Negation) {
+            return ((Negation) exp).subExp().simplify();
+        }
+        // ! (true) == false, ! (false) == true
+        // ! (exp1 && exp2) == ! exp1 || ! exp2, ! (exp1 || exp2) == ! exp1 && ! exp2
+
+        return this;
     }
 
     @Override

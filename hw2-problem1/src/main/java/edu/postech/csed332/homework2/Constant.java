@@ -24,7 +24,7 @@ public record Constant(boolean value) implements Exp {
     @Override
     public Exp simplify() {
         // TODO: implement this
-        return null;
+        return this;
     }
 
     @Override
