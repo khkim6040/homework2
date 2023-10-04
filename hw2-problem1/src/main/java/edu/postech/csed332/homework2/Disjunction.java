@@ -13,19 +13,60 @@ public record Disjunction(Exp... subExps) implements Exp {
     @Override
     public Set<Integer> getVariables() {
         // TODO: implement this
-        return null;
+        return Arrays.stream(subExps)
+                .flatMap(exp -> exp.getVariables().stream())
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Boolean evaluate(Map<Integer, Boolean> assignment) {
         // TODO: implement this
-        return null;
+        for(Boolean key: assignment.values()){
+            if(key){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public Exp simplify() {
         // TODO: implement this
-        return null;
+        this.subExps[0] = this.subExps[0].simplify();
+        this.subExps[1] = this.subExps[1].simplify();
+        Exp firstExp = this.subExps[0];
+        Exp secondExp = this.subExps[1];
+        // Identity and idempotent laws
+        // exp || exp => exp
+        if (firstExp.toPrettyString().equals(secondExp.toPrettyString())) {
+            return firstExp.simplify();
+        }
+        if (secondExp instanceof Constant) {
+            // exp || false => exp
+            if (!((Constant) secondExp).value()) {
+                return firstExp.simplify();
+            }
+            // exp || true => true
+            else {
+                return secondExp.simplify();
+            }
+        }
+        // exp || ! exp => true
+        if (secondExp instanceof Negation) {
+            if (firstExp.toPrettyString().equals(((Negation) secondExp).subExp().toPrettyString())) {
+                return new Constant(true);
+            }
+        }
+        // exp1 || (exp1 && exp2) => exp1
+        if (secondExp instanceof Conjunction) {
+            for(Exp exp: ((Conjunction) secondExp).subExps()){
+                if(firstExp.toPrettyString().equals(exp.toPrettyString())){
+                    return firstExp.simplify();
+                }
+            }
+        }
+        // When there is no simplification
+        return this;
     }
 
     @Override
