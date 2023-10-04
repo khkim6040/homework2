@@ -138,5 +138,15 @@ public class ExpTest {
         Exp exp = ExpParser.parse(input);
         assertEquals(expected, exp.simplify().toPrettyString());
     }
-
+    @ParameterizedTest
+    @CsvSource({"(! true), false", "(! false), true", "(! p1), (! p1)",
+            "(! (! p1)), p1", "(! (p1 && p2)), ((! p1) || (! p2))",
+            "(! (p1 || p2)), ((! p1) && (! p2))", "(! (p1 && (p1 || p2))), (! p1)",
+            "(! (p1 || (p1 && p2))), (! p1)", "(! (p1 && (p2 || p1))), (! p1)",
+            "(! (p1 || (p2 && p1))), (! p1)"
+    })
+    void testNegationSimplify(String input, String expected) {
+        Exp exp = ExpParser.parse(input);
+        assertEquals(expected, exp.simplify().toPrettyString());
+    }
 }

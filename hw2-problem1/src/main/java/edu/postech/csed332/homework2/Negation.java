@@ -29,8 +29,21 @@ public record Negation(Exp subExp) implements Exp {
             return ((Negation) exp).subExp().simplify();
         }
         // ! (true) == false, ! (false) == true
-        // ! (exp1 && exp2) == ! exp1 || ! exp2, ! (exp1 || exp2) == ! exp1 && ! exp2
-
+        if (exp instanceof Constant) {
+            return new Constant(!((Constant) exp).value());
+        }
+        // ! (exp1 && exp2) == ! exp1 || ! exp2
+        if (exp instanceof Conjunction) {
+            Exp firstExp = ((Conjunction) exp).subExps()[0];
+            Exp secondExp = ((Conjunction) exp).subExps()[1];
+            return new Disjunction(new Negation(firstExp).simplify(), new Negation(secondExp).simplify()).simplify();
+        }
+        // ! (exp1 || exp2) == ! exp1 && ! exp2
+        if (exp instanceof Disjunction) {
+            Exp firstExp = ((Disjunction) exp).subExps()[0];
+            Exp secondExp = ((Disjunction) exp).subExps()[1];
+            return new Conjunction(new Negation(firstExp).simplify(), new Negation(secondExp).simplify()).simplify();
+        }
         return this;
     }
 
