@@ -149,4 +149,14 @@ public class ExpTest {
         Exp exp = ExpParser.parse(input);
         assertEquals(expected, exp.simplify().toPrettyString());
     }
+    @Test
+    void testConstantSimplify() {
+        Exp exp = ExpParser.parse("true");
+        assertEquals("true", exp.simplify().toPrettyString());
+    }
+    @Test
+    void testVariableSimplify() {
+        Exp exp = ExpParser.parse("p1");
+        assertEquals("p1", exp.simplify().toPrettyString());
+    }
 }
