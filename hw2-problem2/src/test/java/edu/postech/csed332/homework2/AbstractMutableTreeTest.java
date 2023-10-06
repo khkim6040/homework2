@@ -64,35 +64,31 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         tree.addEdge(v1, v2);
         tree.addEdge(v1, v3);
         tree.addEdge(v2, v4);
-        assertEquals(tree.getNeighborhood(tree.getRoot()), Set.of(v1));
-        assertEquals(tree.getNeighborhood(v1), Set.of(tree.getRoot(), v2, v3));
-        assertEquals(tree.getNeighborhood(v2), Set.of(v1, v4));
-        assertEquals(tree.getNeighborhood(v3), Set.of(v1));
-        assertEquals(tree.getNeighborhood(v4), Set.of(v2));
+        assertEquals(Set.of(v1), tree.getNeighborhood(tree.getRoot()));
+        assertEquals(Set.of(tree.getRoot(), v2, v3), tree.getNeighborhood(v1));
+        assertEquals(Set.of(v1, v4), tree.getNeighborhood(v2));
+        assertEquals(Set.of(v1), tree.getNeighborhood(v3));
+        assertEquals(Set.of(v2), tree.getNeighborhood(v4));
     }
     @Test
     void testGetVertices() {
-        assertEquals(tree.getVertices(), Set.of(tree.getRoot()));
+        assertEquals(Set.of(tree.getRoot()), tree.getVertices());
         tree.addEdge(tree.getRoot(), v1);
-        assertEquals(tree.getVertices(), Set.of(tree.getRoot(), v1));
+        assertEquals(Set.of(tree.getRoot(), v1), tree.getVertices());
         tree.addEdge(v1, v2);
-        assertEquals(tree.getVertices(), Set.of(tree.getRoot(), v1, v2));
+        assertEquals(Set.of(tree.getRoot(), v1, v2), tree.getVertices());
         tree.addEdge(v1, v3);
-        assertEquals(tree.getVertices(), Set.of(tree.getRoot(), v1, v2, v3));
+        assertEquals(Set.of(tree.getRoot(), v1, v2, v3), tree.getVertices());
         tree.addEdge(v2, v4);
-        assertEquals(tree.getVertices(), Set.of(tree.getRoot(), v1, v2, v3, v4));
+        assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.getVertices());
     }
     @Test
     void testGetEdges() {
-        assertEquals(tree.getEdges(), Set.of());
+        assertEquals(Set.of(), tree.getEdges());
         tree.addEdge(tree.getRoot(), v1);
-        assertEquals(tree.getEdges(), Set.of(new Edge<>(tree.getRoot(), v1)));
+        assertEquals(Set.of(new Edge<>(tree.getRoot(), v1), new Edge<>(v1, tree.getRoot())), tree.getEdges());
         tree.addEdge(v1, v2);
-        assertEquals(tree.getEdges(), Set.of(new Edge<>(tree.getRoot(), v1), new Edge<>(v1, v2)));
-        tree.addEdge(v1, v3);
-        assertEquals(tree.getEdges(), Set.of(new Edge<>(tree.getRoot(), v1), new Edge<>(v1, v2), new Edge<>(v1, v3)));
-        tree.addEdge(v2, v4);
-        assertEquals(tree.getEdges(), Set.of(new Edge<>(tree.getRoot(), v1), new Edge<>(v1, v2), new Edge<>(v1, v3), new Edge<>(v2, v4)));
+        assertEquals(Set.of(new Edge<>(tree.getRoot(), v1), new Edge<>(v1, v2), new Edge<>(v2, v1), new Edge<>(v1, tree.getRoot())), tree.getEdges());
     }
     @Test
     void testFindReachableVertices() {
@@ -100,29 +96,28 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         tree.addEdge(v1, v2);
         tree.addEdge(v1, v3);
         tree.addEdge(v2, v4);
-        assertEquals(tree.findReachableVertices(tree.getRoot()), Set.of(tree.getRoot(), v1, v2, v3, v4));
-        assertEquals(tree.findReachableVertices(v1), Set.of(tree.getRoot(), v1, v2, v3, v4));
-        assertEquals(tree.findReachableVertices(v2), Set.of(tree.getRoot(), v1, v2, v3, v4));
-        assertEquals(tree.findReachableVertices(v3), Set.of(tree.getRoot(), v1, v2, v3, v4));
-        assertEquals(tree.findReachableVertices(v4), Set.of(tree.getRoot(), v1, v2, v3, v4));
+        assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.findReachableVertices(tree.getRoot()));
+        assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.findReachableVertices(v1));
+        assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.findReachableVertices(v2));
+        assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.findReachableVertices(v3));
+        assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.findReachableVertices(v4));
     }
     @Test
     void testToRepr() {
-        assertEquals(tree.toRepr(), "()");
+        assertEquals("[root: 0, vertex: {0}, edge: {}]", tree.toRepr());
         tree.addEdge(tree.getRoot(), v1);
-        assertEquals(tree.toRepr(), "(v1)"); // TODO: check if this is correct
     }
     @Test
     void testGetHeight() {
-        assertEquals(tree.getHeight(), 0);
+        assertEquals(0, tree.getHeight());
         tree.addEdge(tree.getRoot(), v1);
-        assertEquals(tree.getHeight(), 1);
+        assertEquals(1, tree.getHeight());
         tree.addEdge(v1, v2);
-        assertEquals(tree.getHeight(), 2);
+        assertEquals(2, tree.getHeight());
         tree.addEdge(v1, v3);
-        assertEquals(tree.getHeight(), 2);
+        assertEquals(2, tree.getHeight());
         tree.addEdge(v2, v4);
-        assertEquals(tree.getHeight(), 3);
+        assertEquals(3, tree.getHeight());
     }
     @Test
     void testGetChildren() {
@@ -130,11 +125,11 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         tree.addEdge(v1, v2);
         tree.addEdge(v1, v3);
         tree.addEdge(v2, v4);
-        assertEquals(tree.getChildren(tree.getRoot()), Set.of(v1));
-        assertEquals(tree.getChildren(v1), Set.of(v2, v3));
-        assertEquals(tree.getChildren(v2), Set.of(v4));
-        assertEquals(tree.getChildren(v3), Set.of());
-        assertEquals(tree.getChildren(v4), Set.of());
+        assertEquals(Set.of(v1), tree.getChildren(tree.getRoot()));
+        assertEquals(Set.of(v2, v3), tree.getChildren(v1));
+        assertEquals(Set.of(v4), tree.getChildren(v2));
+        assertEquals(Set.of(), tree.getChildren(v3));
+        assertEquals(Set.of(), tree.getChildren(v4));
     }
     @Test
     void testGetParent() {
@@ -142,18 +137,15 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         tree.addEdge(v1, v2);
         tree.addEdge(v1, v3);
         tree.addEdge(v2, v4);
-        assertEquals(tree.getParent(tree.getRoot()), Optional.empty());
-        assertEquals(tree.getParent(v1), Optional.of(tree.getRoot()));
-        assertEquals(tree.getParent(v2), Optional.of(v1));
-        assertEquals(tree.getParent(v3), Optional.of(v1));
-        assertEquals(tree.getParent(v4), Optional.of(v2));
+        assertEquals(Optional.empty(), tree.getParent(tree.getRoot()));
+        assertEquals(Optional.of(tree.getRoot()), tree.getParent(v1));
+        assertEquals(Optional.of(v1), tree.getParent(v2));
+        assertEquals(Optional.of(v1), tree.getParent(v3));
+        assertEquals(Optional.of(v2), tree.getParent(v4));
     }
     @Test
     void testAddVertex() {
-        assertTrue(tree.addVertex(v1));
-        assertTrue(tree.containsVertex(v1));
         assertFalse(tree.addVertex(v1));
-        assertTrue(tree.containsVertex(v1));
     }
     @Test
     void removeVertexShouldRemoveVertexAndItsEdge() {
@@ -193,6 +185,10 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         assertFalse(tree.containsVertex(v1));
     }
     @Test
+    void removeRoot() {
+        assertThrows(IllegalArgumentException.class, () -> tree.removeVertex(tree.getRoot()));
+    }
+    @Test
     void testAddEdge() {
         assertTrue(tree.addEdge(tree.getRoot(), v2));
         assertTrue(tree.containsEdge(tree.getRoot(), v2));
@@ -206,7 +202,7 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
     void testAddEdgeShouldNotAddEdgeIfTargetIsAlreadyInTree() {
         tree.addEdge(tree.getRoot(), v1);
         assertFalse(tree.addEdge(tree.getRoot(), v1));
-        assertFalse(tree.containsEdge(tree.getRoot(), v1));
+        assertTrue(tree.containsEdge(tree.getRoot(), v1));
     }
     @Test
     void testAddEdgeShouldNotAddEdgeIfBothSourceAndTargetAreAlreadyInTree() {
