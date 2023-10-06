@@ -219,7 +219,7 @@ public class DelegateTree<N extends Comparable<N>> implements MutableTree<N> {
             }
         }
         // Only one path from the root to any other vertex
-        if(DFS(root, 1) < vertices.size()) {
+        if(DFS(root, 1) != vertices.size()) {
             return false;
         }
         return true;

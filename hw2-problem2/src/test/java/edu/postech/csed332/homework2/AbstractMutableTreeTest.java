@@ -102,6 +102,7 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.findReachableVertices(v3));
         assertEquals(Set.of(tree.getRoot(), v1, v2, v3, v4), tree.findReachableVertices(v4));
     }
+    // Test for Tree
     @Test
     void testToRepr() {
         assertEquals("[root: 0, vertex: {0}, edge: {}]", tree.toRepr());
@@ -143,6 +144,7 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
         assertEquals(Optional.of(v1), tree.getParent(v3));
         assertEquals(Optional.of(v2), tree.getParent(v4));
     }
+    // Test for mutableTree
     @Test
     void testAddVertex() {
         assertFalse(tree.addVertex(v1));
