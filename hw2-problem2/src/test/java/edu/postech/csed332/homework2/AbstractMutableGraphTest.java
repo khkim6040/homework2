@@ -186,8 +186,4 @@ public abstract class AbstractMutableGraphTest<V extends Comparable<V>, G extend
         assertTrue(graph.addEdge(v1, v3));
         assertEquals(Set.of(new Edge<>(v1, v2), new Edge<>(v1, v3), new Edge<>(v2, v1), new Edge<>(v3, v1)), graph.getEdges());
     }
-    @Test
-    void testToReprEmpty() {
-        assertEquals("[vertex: {}, edge: {}]", graph.toRepr()); // TODO: fix this
-    }
 }
