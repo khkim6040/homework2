@@ -117,10 +117,11 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
      */
     boolean checkInv() {
         // TODO: implement this
+        Set<N> vertices = getVertices();
         for(Edge<N> edge : getEdges()) {
             N source = edge.source();
             N target = edge.target();
-            Set<N> vertices = getVertices();
+            // for each edge, source and target should be in both V_this, E_this
             if(!vertices.contains(source) || !vertices.contains(target)) {
                 return false;
             }
@@ -130,7 +131,12 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
             if (!getNeighborhood(target).contains(source)) {
                 return false;
             }
-            // TODO: self-loop check?
+        }
+        // self-loop check
+        for(N vertex : vertices) {
+            if(getNeighborhood(vertex).contains(vertex)) {
+                return false;
+            }
         }
         return true;
     }
