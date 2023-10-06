@@ -36,8 +36,8 @@ boolean containsVertex(N vertex);
 boolean containsEdge(N source, N target);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: source and target vertices are in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: true if source and target is connected by an edge
 
 ##### getNeighborhood
 
@@ -45,8 +45,8 @@ boolean containsEdge(N source, N target);
 Set<N> getNeighborhood(N vertex);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: returns the set of vertices that are connected to the vertex by an edge, immutable
 
 
 ## `Tree<N>`
@@ -55,7 +55,12 @@ Let $`T_{this} = (V_{this}, E_{this}, \hat{v}_{this})`$ be an abstract value of 
 
 ##### Class invariant 
 
-<!-- TODO -->
+```math
+\forall (v, w) \in E_{this}.\ v, w \in V_{this} \land (w, v) \in E_{this}
+for all pairs of vertices (v, w) in V_{this}, there exists a sequence of edges in E_{this} that connects vertex v to vertex w.
+There must be a single root node in the tree
+The tree should not contain self-loops
+```
 
 ##### getDepth
 
@@ -75,8 +80,11 @@ int getDepth(N vertex);
 int getHeight();
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$.
+- ensures: 
+  + returns __IllegalArgumentException__ if vertex is not in the tree
+  + returns 0 if vertex is getRoot() and
+  + returns max(getHeight(getChildren(vertex))) + 1, otherwise.
 
 ##### getChildren
 
@@ -84,8 +92,10 @@ int getHeight();
 Set<N> getChildren(N vertex);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: vertex is in the tree
+- ensures:
+    + returns __IllegalArgumentException__ if vertex is not in the tree
+    + returns the set of vertices that are connected to the vertex by an edge, immutable
 
 ##### getParent
 
@@ -93,8 +103,10 @@ Set<N> getChildren(N vertex);
 Optional<N> getParent(N vertex);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: vertex is in the tree
+- ensures: 
+    + returns the parent of the vertex, if it exists
+    + returns Optional.empty() if the vertex is the root
 
 
 ## `MutableGraph<N>`
@@ -127,8 +139,12 @@ boolean addVertex(N vertex);
 boolean removeVertex(N vertex);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: 
+    + $`V_{next} = V_{this} \setminus \{\texttt{vertex}\}`$; 
+    + $`E_{next} = \{(v, w) \in E_{this} \mid v \neq \texttt{vertex} \land w \neq \texttt{vertex}\}`$; 
+    + If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
+    + returns true if and only if $`\texttt{vertex} \in V_{this}`$.
 
 ##### addEdge
 
@@ -136,8 +152,12 @@ boolean removeVertex(N vertex);
 boolean addEdge(N source, N target);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: source and target vertices are in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures:
+    + $`V_{next} = V_{this} \cup \{\texttt{source}, \texttt{target}\}`$ if source and target are not in the graph, put them in the graph
+    + $`E_{next} = E_{this} \cup \{(\texttt{source}, \texttt{target})\}`$ if the edge does not already exist, add it to the graph
+    + If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
+    + returns true if and only if $`E_{next} \neq E_{this}`$.
 
 ##### removeEdge
 
@@ -145,8 +165,11 @@ boolean addEdge(N source, N target);
 boolean removeEdge(N source, N target);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: source and target vertices are in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: 
+    + $`E_{next} = E_{this} \setminus \{(\texttt{source}, \texttt{target})\}`$ if the edge exists, remove it from the graph
+    + If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
+    + returns true if and only if $`E_{next} \neq E_{this}`$.
 
 
 ## `MutableTree<N>`
@@ -156,7 +179,12 @@ and $`T_{next} = (V_{next}, E_{next}, \hat{v}_{next})`$ be an abstract value of 
 
 ##### Class invariant 
 
-<!-- TODO -->
+```math
+\forall (v, w) \in E_{this}.\ v, w \in V_{this} \land (w, v) \in E_{this}
+for all pairs of vertices (v, w) in V_{this}, there exists a sequence of edges in E_{this} that connects vertex v to vertex w.
+There must be a single root node in the tree
+The tree should not contain self-loops
+```
 
 ##### addVertex
 
@@ -164,8 +192,12 @@ and $`T_{next} = (V_{next}, E_{next}, \hat{v}_{next})`$ be an abstract value of 
 boolean addVertex(N vertex);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: 
+    + $`V_{next} = V_{this} \cup \{\texttt{vertex}\}`$; 
+    + $`E_{next} = E_{this}`$ (the edges are not modified)
+    + If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+    + returns true if and only if $`\texttt{vertex} \notin V_{this}`$.
 
 ##### removeVertex
 
@@ -173,8 +205,13 @@ boolean addVertex(N vertex);
 boolean removeVertex(N vertex);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: 
+    + $`V_{next} = V_{this} \setminus \{\texttt{vertex}\}`$; 
+    + $`E_{next} = \{(v, w) \in E_{this} \mid v \neq \texttt{vertex} \land w \neq \texttt{vertex}\}`$ for vertices that are descendants of given vertex, remove them from the tree 
+    + If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+    + returns true if and only if $`\texttt{vertex} \in V_{this}`$.
+    + If the vertex is the root, throw __llegalArgumentException__ 
 
 ##### addEdge
 
@@ -182,8 +219,12 @@ boolean removeVertex(N vertex);
 boolean addEdge(N source, N target);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: source and target vertices are in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: 
+    + $`V_{next} = V_{this} \cup \texttt{target}`$ source is already in the tree and target is not in the tree, so create target node and add it to the tree
+    + $`E_{next} = E_{this} \cup \{(\texttt{source}, \texttt{target}), (\texttt{target}, \texttt{source})\}`$ 
+    + If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+    + returns true if and only if $`E_{next} \neq E_{this}`$.
 
 ##### removeEdge
 
@@ -191,8 +232,14 @@ boolean addEdge(N source, N target);
 boolean removeEdge(N source, N target);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: source and target vertices are in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures: 
+    + $`E_{next} = E_{this} \setminus E_{related}`$ where 
+    + if the edge exists, remove it from the graph and remove all edges related to it
+    + if $`(\texttt{source}, \texttt{target})`$ is in $`E_{this}`$, then remove $`(\texttt{source}, \texttt{target})`$ and $`(\texttt{target}, \texttt{source})`$ from $`E_{this}`$
+        + Also remove all edges that are related to $`\texttt{source}`$ and $`\texttt{target}`$ from $`E_{this}`$
+    + If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+    + returns true if and only if $`E_{next} \neq E_{this}`$.
 
 
 # Problem 2-2
@@ -203,20 +250,41 @@ For each question, explain your reasoning _using the abstract specifications tha
 
 ##### `Tree<N>` and `Graph<N>`
 
-* Is `Tree<N>` a subtype of `Graph<N>`?
-<!-- TODO -->
+* Is `Tree<N>` a subtype of `Graph<N>`?  
+> __Yes__, because Tree has strong specification than Graph. Tree has to satisfy the class invariant of Graph and Tree's class invariant like root node, no self-loop, and connected graph. 
+> Also, there is no method overriding in Tree except toRepr().  
+> Therefore, Tree is a subtype of Graph.
+
 
 ##### `MutableGraph<N>` and `Graph<N>`
 
 * Is `MutableGraph<N>` a subtype of `Graph<N>`?
-<!-- TODO -->
+> __Yes__, because MutableGraph has strong specification than Graph. MutableGraph satisfies the class invariant of Graph  
+> Also, there is no method overriding in MutableGraph except toRepr().  
+> Therefore, MutableGraph is a subtype of Graph.
 
 ##### `MutableTree<N>` and `Tree<N>`
 
 * Is `MutableTree<N>` a subtype of `Tree<N>`?
-<!-- TODO -->
+> __Yes__, because MutableTree has strong specification than Tree. MutableTree satisfies the class invariant of Tree
+> Also, there are only methods overriding of MutableGraph in MutableTree such as addVertex, removeVertex, addEdge, removeEdge.
+> Therefore, MutableTree is a subtype of Tree.
 
 ##### `MutableTree<N>` and `MutableGraph<N>`
 
-* Is `MutableTree<N>` a subtype of `MutableGraph<N>`?
-<!-- TODO -->
+* Is `MutableTree<N>` a subtype of `MutableGraph<N>`?  
+> __No__, addVertex method for MutableTree has different result rather MutableGraph does.   
+> For example, if we add a vertex which is not in MutableGraph, the vertex will be added to the tree. And return value is true.    
+> However, we cannot add a vertex by using addVertex method in MutableGraph because of tree's invariant property. And its return value is always false by MutableTree's interface code.   
+> Therefore, MutableTree is not a subtype of MutableGraph. 
+```java
+// Example code
+T = MutableGraph<N>
+S = MutableTree<N>
+// for a vertex v that is not null, and not in both T and S
+// T.addVertex(v) will returns true
+// S.addVertex(v) will returns false
+assert T.addVertex(v) == S.addVertex(v)
+```
+
+
