@@ -130,6 +130,7 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
             if (!getNeighborhood(target).contains(source)) {
                 return false;
             }
+            // TODO: self-loop check?
         }
         return true;
     }
