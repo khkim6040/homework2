@@ -175,13 +175,6 @@ public class DelegateTree<N extends Comparable<N>> implements MutableTree<N> {
         return delegate.getEdges();
     }
 
-    public int DFS(N vertex, int count) {
-        Set<N> children = getChildren(vertex);
-        for(N child : children) {
-            count = DFS(child, count + 1);
-        }
-        return count;
-    }
     /**
      * Checks if all class invariants hold for this object
      *
@@ -219,8 +212,11 @@ public class DelegateTree<N extends Comparable<N>> implements MutableTree<N> {
             }
         }
         // Only one path from the root to any other vertex
-        if(DFS(root, 1) != vertices.size()) {
-            return false;
+        Set<N> reachableVertices = findReachableVertices(root);
+        for(N vertex : vertices) {
+            if(!reachableVertices.contains(vertex)) {
+                return false;
+            }
         }
         return true;
     }
