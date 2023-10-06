@@ -30,43 +30,72 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
     @Override
     public boolean containsVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        return getVertices().contains(vertex);
     }
 
     @Override
     public boolean addVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        if (containsVertex(vertex)) {
+            return false;
+        }
+        adjMap.put(vertex, new TreeSet<>());
+        return true;
     }
 
     @Override
     public boolean removeVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        if (!containsVertex(vertex)) {
+            return false;
+        }
+        adjMap.remove(vertex);
+        adjMap.values().forEach(set -> set.remove(vertex));
+        return true;
     }
 
     @Override
     public boolean containsEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        return getEdges().contains(new Edge<>(source, target));
     }
 
     @Override
     public boolean addEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        if(getEdges().contains(new Edge<>(source, target))) {
+            return false;
+        }
+        // Add source and target if they are not in the graph
+        if (!containsVertex(source)) {
+            addVertex(source);
+        }
+        if (!containsVertex(target)) {
+            addVertex(target);
+        }
+        adjMap.get(source).add(target);
+        adjMap.get(target).add(source);
+        return true;
     }
 
     @Override
     public boolean removeEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        if (!containsEdge(source, target)) {
+            return false;
+        }
+        adjMap.get(source).remove(target);
+        adjMap.get(target).remove(source);
+        return true;
     }
 
     @Override
     public @NotNull Set<N> getNeighborhood(@NotNull N vertex) {
         // TODO: implement this
-        return Set.of();
+        if (!containsVertex(vertex)) {
+            return Collections.emptySet();
+        }
+        return Collections.unmodifiableSet(adjMap.get(vertex));
     }
 
     @Override
@@ -88,6 +117,27 @@ public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph
      */
     boolean checkInv() {
         // TODO: implement this
-        return false;
+        Set<N> vertices = getVertices();
+        for(Edge<N> edge : getEdges()) {
+            N source = edge.source();
+            N target = edge.target();
+            // for each edge, source and target should be in both V_this, E_this
+            if(!vertices.contains(source) || !vertices.contains(target)) {
+                return false;
+            }
+            if (!getNeighborhood(source).contains(target)) {
+                return false;
+            }
+            if (!getNeighborhood(target).contains(source)) {
+                return false;
+            }
+        }
+        // self-loop check
+        for(N vertex : vertices) {
+            if(getNeighborhood(vertex).contains(vertex)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
