@@ -260,17 +260,29 @@ For each question, explain your reasoning _using the abstract specifications tha
 ##### `MutableGraph<N>` and `Graph<N>`
 
 * Is `MutableGraph<N>` a subtype of `Graph<N>`?
-> __Yes__, because MutableGraph has strong specification than Graph. MutableGraph satisfies the class invariant of Graph  
-> Also, there is no method overriding in MutableGraph except toRepr().  
-> Therefore, MutableGraph is a subtype of Graph.
-
+> __No__, Although MutableGraph has strong specification than Graph, and MutableGraph satisfies the class invariant of Graph, mutableGraph has methods such as addVertex, removeVertex, addEdge, removeEdge which can change member variable of Graph.    
+> Therefore, MutableTree tris to change a member variable of Graph. MutableGraph is not a subtype of Graph.
+```java
+Graph graph = new mutableGraph(args);
+doSomething(graph); // such as addVertex, removeVertex, addEdge, removeEdge
+if (graph.equals(new Graph(args)))
+    System.out.println("MutableGraph is a subtype of Graph");
+else
+    System.out.println("MutableGraph is not a subtype of Graph");
+```
 ##### `MutableTree<N>` and `Tree<N>`
 
 * Is `MutableTree<N>` a subtype of `Tree<N>`?
-> __Yes__, because MutableTree has strong specification than Tree. MutableTree satisfies the class invariant of Tree
-> Also, there are only methods overriding of MutableGraph in MutableTree such as addVertex, removeVertex, addEdge, removeEdge.
-> Therefore, MutableTree is a subtype of Tree.
-
+> __No__, Although MutableTree has strong specification than Tree, and satisfies the class invariant of Tree, there are also methods such as addVertex, removeVertex, addEdge, removeEdge which can change member variable of Tree.  
+> Therefore, MutableTree tris to change a member variable of Tree. MutableTree is not a subtype of Tree.
+```java
+Tree tree = new mutableTree(args);
+doSomething(tree); // such as addVertex, removeVertex, addEdge, removeEdge
+if (tree.equals(new Tree(args)))
+    System.out.println("MutableTree is a subtype of Tree");
+else
+    System.out.println("MutableTree is not a subtype of Tree");
+```
 ##### `MutableTree<N>` and `MutableGraph<N>`
 
 * Is `MutableTree<N>` a subtype of `MutableGraph<N>`?  
@@ -285,6 +297,7 @@ S = MutableTree<N>
 // for a vertex v that is not null, and not in both T and S
 // T.addVertex(v) will returns true
 // S.addVertex(v) will returns false
+// Postcondition is different
 assert T.addVertex(v) == S.addVertex(v)
 ```
 
