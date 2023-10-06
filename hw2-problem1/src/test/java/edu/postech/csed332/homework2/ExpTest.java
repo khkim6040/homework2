@@ -122,7 +122,8 @@ public class ExpTest {
     @CsvSource({"(p1 && true), p1", "(p1 && p1), p1", "(p1 && false), false",
             "(p1 && ! p1), false", "(p1 && (p1 || p2)), p1",
             "(p1 && p2), (p1 && p2)", "(p1 && (p2 && (p2 || p3))), (p1 && p2)",
-            "((p1 && true) && p2), (p1 && p2)", "((p1 && p1) && p2), (p1 && p2)"
+            "((p1 && true) && p2), (p1 && p2)", "((p1 && p1) && p2), (p1 && p2)",
+            "(p1 || true) && ! (p2 && ! p3), ((! p2) || p3)"
     })
     void testConjunctionSimplify(String input, String expected) {
         Exp exp = ExpParser.parse(input);

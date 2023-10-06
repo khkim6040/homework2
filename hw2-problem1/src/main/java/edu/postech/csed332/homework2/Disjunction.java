@@ -51,6 +51,16 @@ public record Disjunction(Exp... subExps) implements Exp {
                 return secondExp.simplify();
             }
         }
+        if (firstExp instanceof Constant) {
+            // false || exp => exp
+            if (!((Constant) firstExp).value()) {
+                return secondExp.simplify();
+            }
+            // true || exp => true
+            else {
+                return firstExp.simplify();
+            }
+        }
         // exp || ! exp => true
         if (secondExp instanceof Negation) {
             if (firstExp.toPrettyString().equals(((Negation) secondExp).subExp().toPrettyString())) {

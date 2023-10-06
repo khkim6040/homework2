@@ -49,9 +49,24 @@ public record Conjunction(Exp... subExps) implements Exp {
                 return firstExp.simplify();
             }
         }
+        if (firstExp instanceof Constant) {
+            // false && exp => false
+            if (!((Constant) firstExp).value()) {
+                return new Constant(false);
+            }
+            // true && exp => exp
+            else {
+                return secondExp;
+            }
+        }
         // exp && ! exp => false
         if (secondExp instanceof Negation) {
             if (firstExp.toPrettyString().equals(((Negation) secondExp).subExp().toPrettyString())) {
+                return new Constant(false);
+            }
+        }
+        if (firstExp instanceof Negation) {
+            if (secondExp.toPrettyString().equals(((Negation) firstExp).subExp().toPrettyString())) {
                 return new Constant(false);
             }
         }
