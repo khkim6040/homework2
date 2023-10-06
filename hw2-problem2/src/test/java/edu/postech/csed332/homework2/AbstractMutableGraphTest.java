@@ -120,6 +120,7 @@ public abstract class AbstractMutableGraphTest<V extends Comparable<V>, G extend
     void testContainsVertex() {
         assertTrue(graph.addVertex(v1));
         assertTrue(graph.containsVertex(v1));
+        assertFalse(graph.containsVertex(v2));
     }
     @Test
     void testContainsNonExistingVertex() {
