@@ -18,6 +18,7 @@ Let $`G_{this} = (V_{this}, E_{this})`$ be an abstract value of the current grap
 ```math
 \forall (v, w) \in E_{this}.\ v, w \in V_{this} \land (w, v) \in E_{this}
 ```
+The graph should not contain self-loops  
 
 ##### containsVertex
 
@@ -56,11 +57,11 @@ Let $`T_{this} = (V_{this}, E_{this}, \hat{v}_{this})`$ be an abstract value of 
 ##### Class invariant 
 
 ```math
-\forall (v, w) \in E_{this}.\ v, w \in V_{this} \land (w, v) \in E_{this}
-for all pairs of vertices (v, w) in V_{this}, there exists a sequence of edges in E_{this} that connects vertex v to vertex w.
-There must be a single root node in the tree
-The tree should not contain self-loops
+\forall (v, w) \in E_{this}.\ v, w \in V_{this} \land (w, v) \in E_{this}  
 ```
+For all vertices v in V_this, there exists only one path from root to v.  
+There must be a single root node in the tree.  
+The tree should not contain self-loops.  
 
 ##### getDepth
 
@@ -68,7 +69,7 @@ The tree should not contain self-loops
 int getDepth(N vertex);
 ```
 
-- requires: 
+- requires:   
   + vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$.
 - ensures:  
   + returns 0 if vertex is getRoot(); and
@@ -155,7 +156,7 @@ boolean addEdge(N source, N target);
 - requires: source and target vertices are in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:
     + $`V_{next} = V_{this} \cup \{\texttt{source}, \texttt{target}\}`$ if source and target are not in the graph, put them in the graph
-    + $`E_{next} = E_{this} \cup \{(\texttt{source}, \texttt{target})\}`$ if the edge does not already exist, add it to the graph
+    + $`E_{next} = E_{this} \cup \{(\texttt{source}, \texttt{target}), (\texttt{target}, \texttt{source})\}`$ if the edge does not already exist, add it to the graph
     + If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
     + returns true if and only if $`E_{next} \neq E_{this}`$.
 
@@ -181,10 +182,10 @@ and $`T_{next} = (V_{next}, E_{next}, \hat{v}_{next})`$ be an abstract value of 
 
 ```math
 \forall (v, w) \in E_{this}.\ v, w \in V_{this} \land (w, v) \in E_{this}
-for all pairs of vertices (v, w) in V_{this}, there exists a sequence of edges in E_{this} that connects vertex v to vertex w.
-There must be a single root node in the tree
-The tree should not contain self-loops
 ```
+For all pairs of vertices (v, w) in V_{this}, there exists a sequence of edges in E_{this} that connects vertex v to vertex w.  
+There must be a single root node in the tree.  
+The tree should not contain self-loops.  
 
 ##### addVertex
 
