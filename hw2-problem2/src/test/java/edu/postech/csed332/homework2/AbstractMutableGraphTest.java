@@ -62,10 +62,17 @@ public abstract class AbstractMutableGraphTest<V extends Comparable<V>, G extend
         assertTrue(checkInv());
     }
     @Test
-    void testAddEdge() {
+    void testAddEdgeShouldCreateUndirectedEdge() {
         assertTrue(graph.addVertex(v1));
         assertTrue(graph.addVertex(v2));
         assertTrue(graph.addEdge(v1, v2));
+        assertTrue(graph.containsEdge(v1, v2));
+        assertTrue(graph.containsEdge(v2, v1));
+    }
+    @Test
+    void testAddEdgeWithoutVertices() {
+        assertTrue(graph.addEdge(v1, v2));
+        assertTrue(graph.containsEdge(v2, v1));
         assertTrue(graph.containsEdge(v1, v2));
     }
     @Test
@@ -99,6 +106,7 @@ public abstract class AbstractMutableGraphTest<V extends Comparable<V>, G extend
         assertTrue(graph.removeVertex(v1));
         assertFalse(graph.containsVertex(v1));
         assertFalse(graph.containsEdge(v1, v2));
+        assertFalse(graph.containsEdge(v2, v1));
     }
     @Test
     void testRemoveVertexShouldRemoveRelatedEdges() {
@@ -110,6 +118,9 @@ public abstract class AbstractMutableGraphTest<V extends Comparable<V>, G extend
         assertTrue(graph.removeVertex(v1));
         assertFalse(graph.containsVertex(v1));
         assertFalse(graph.containsEdge(v1, v2));
+        assertFalse(graph.containsEdge(v2, v1));
+        assertFalse(graph.containsEdge(v1, v3));
+        assertFalse(graph.containsEdge(v3, v1));
     }
     @Test
     void testRemoveNonExistingVertex() {
@@ -173,22 +184,10 @@ public abstract class AbstractMutableGraphTest<V extends Comparable<V>, G extend
         assertTrue(graph.addVertex(v3));
         assertTrue(graph.addEdge(v1, v2));
         assertTrue(graph.addEdge(v1, v3));
-        assertEquals(Set.of(new Edge<>(v1, v2), new Edge<>(v1, v3)), graph.getEdges());
-    }
-    @Test
-    void testToRepr() {
-        assertTrue(graph.addVertex(v1));
-        assertTrue(graph.addVertex(v2));
-        assertTrue(graph.addVertex(v3));
-        assertTrue(graph.addEdge(v1, v2));
-        assertTrue(graph.addEdge(v1, v3));
-        assertEquals("v1 -> [v2, v3]\nv2 -> []\nv3 -> []\n", graph.toRepr()); // TODO: fix this
+        assertEquals(Set.of(new Edge<>(v1, v2), new Edge<>(v1, v3), new Edge<>(v2, v1), new Edge<>(v3, v1)), graph.getEdges());
     }
     @Test
     void testToReprEmpty() {
-        assertEquals("", graph.toRepr()); // TODO: fix this
+        assertEquals("[vertex: {}, edge: {}]", graph.toRepr()); // TODO: fix this
     }
-
-
-
 }
