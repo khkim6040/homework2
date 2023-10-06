@@ -56,7 +56,7 @@ public record Conjunction(Exp... subExps) implements Exp {
             }
             // true && exp => exp
             else {
-                return secondExp;
+                return secondExp.simplify();
             }
         }
         // exp && ! exp => false
