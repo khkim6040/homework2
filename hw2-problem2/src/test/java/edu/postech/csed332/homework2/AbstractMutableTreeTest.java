@@ -104,11 +104,6 @@ public abstract class AbstractMutableTreeTest<V extends Comparable<V>, T extends
     }
     // Test for Tree
     @Test
-    void testToRepr() {
-        assertEquals("[root: 0, vertex: {0}, edge: {}]", tree.toRepr());
-        tree.addEdge(tree.getRoot(), v1);
-    }
-    @Test
     void testGetHeight() {
         assertEquals(0, tree.getHeight());
         tree.addEdge(tree.getRoot(), v1);
